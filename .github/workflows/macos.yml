@@ -76,6 +76,7 @@ jobs:
           export REF=${GITHUB_REF##*/}
           export C_FLAGS=$(echo -e $C_FLAGS | tr -d '\n')
           cd build && date -u && date +%s > configstamp
+          export NOTARIZATION=$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password "$NOTARY")
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
@@ -100,7 +101,7 @@ jobs:
             -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
             -DCONTINUOUS=ON \
             -DCODESIGNID:STRING="$IDENT" \
-            -DNOTARY="$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password $NOTARY)" \
+            -DNOTARY="$NOTARIZATION" \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
@@ -219,6 +220,7 @@ jobs:
           export REF=${GITHUB_REF##*/}
           export C_FLAGS=$(echo -e $C_FLAGS | tr -d '\n')
           cd build && date -u && date +%s > configstamp
+          export NOTARIZATION=$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password "$NOTARY")
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
@@ -241,7 +243,7 @@ jobs:
             -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
             -DCONTINUOUS=ON \
             -DCODESIGNID:STRING="$IDENT" \
-            -DNOTARY="$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password $NOTARY)" \
+            -DNOTARY="$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password $NOTARIZATION)" \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
