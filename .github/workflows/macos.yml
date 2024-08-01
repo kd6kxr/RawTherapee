@@ -47,7 +47,7 @@ jobs:
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
-            -DCMAKE_EXE_LINKER_FLAGS="-L. -L/usr/local/lib -Wl,-rpath -Wl,/usr/local/lib -L/usr/local/opt/gdk-pixbuf/lib -L/usr/local/opt/libiconv/lib -L/usr/local/opt/libomp/lib -L/usr/local/opt/libffi/lib -L/usr/local/opt/libffi/lib -L/usr/local/opt/libxml2/lib -L/usr/local/opt/expat/lib" \
+            -DCMAKE_EXE_LINKER_FLAGS="-L. -L/usr/local/lib -Wl,-rpath -Wl,/usr/local/lib -L/usr/local/opt/gdk-pixbuf/lib -L/usr/local/opt/libomp/lib -L/usr/local/opt/expat/lib" \
             -DCACHE_NAME_SUFFIX="${RAW_THERAPEE_VERSION}-${REF}" \
             -DPROC_TARGET_NUMBER="1" \
             -DPROC_LABEL="generic processor" \
@@ -120,8 +120,6 @@ jobs:
           files: |
             ${{env.ARTIFACT_PATH}}
             
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -223,7 +221,7 @@ jobs:
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
-            -DCMAKE_EXE_LINKER_FLAGS="-L. -L/opt/homebrew/lib -Wl,-rpath -Wl,/opt/homebrew/lib -L/opt/homebrew/opt/gdk-pixbuf/lib -L/opt/homebrew/opt/libiconv/lib -L/opt/homebrew/opt/libomp/lib -L/opt/homebrew/opt/libffi/lib -L/opt/homebrew/opt/libffi/lib -L/opt/homebrew/opt/libxml2/lib -L/opt/homebrew/opt/expat/lib" \
+            -DCMAKE_EXE_LINKER_FLAGS="-L. -L/opt/homebrew/lib -Wl,-rpath -Wl,/opt/homebrew/lib -L/opt/homebrew/opt/gdk-pixbuf/lib -L/opt/homebrew/opt/libomp/lib -L/opt/homebrew/opt/expat/lib" \
             -DCACHE_NAME_SUFFIX="${RAW_THERAPEE_VERSION}-${REF}" \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DWITH_LTO="ON" \
@@ -291,8 +289,6 @@ jobs:
           files: |
             ${{env.ARTIFACT_PATH}}
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
