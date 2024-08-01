@@ -85,7 +85,7 @@ jobs:
             -DPROC_TARGET_NUMBER="1" \
             -DPROC_LABEL="generic processor" \
             -DCMAKE_OSX_ARCHITECTURES=$(uname -m) \
-            -DWITH_LTO="OFF" \
+            -DWITH_LTO="ON" \
             -DLENSFUNDBDIR="/Applications/RawTherapee.app/Contents/Resources/share/lensfun" \
             -DCMAKE_C_COMPILER=clang \
             -DCMAKE_CXX_COMPILER=clang++ \
@@ -242,6 +242,7 @@ jobs:
             -DCONTINUOUS=ON \
             -DCODESIGNID:STRING="$IDENT" \
             -DNOTARY:STRING="$NOTARIZATION" \
+            -DLOCAL_PREFIX=/opt/homebrew \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
