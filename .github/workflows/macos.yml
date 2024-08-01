@@ -149,9 +149,7 @@ jobs:
 
       - name: test app
         run: |
-          cd build
-          sudo cp -r RawTherapee.app /Applications
-          time RawTherapee_*/rawtherapee-cli
+          sudo cp -R build/RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
           osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
@@ -291,9 +289,7 @@ jobs:
           
       - name: test app
         run: |
-          cd build
-          sudo cp -r RawTherapee.app /Applications
-          time RawTherapee_*/rawtherapee-cli
+          sudo cp -R build/RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
           osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
