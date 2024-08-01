@@ -289,7 +289,11 @@ jobs:
           
       - name: test app
         run: |
+          ls /Users/runner/work/RawTherapee
+          ls /Users/runner/work/RawTherapee/RawTherapee
+          ls /Users/runner/work/RawTherapee/RawTherapee/build
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
+          ls /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
           osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
