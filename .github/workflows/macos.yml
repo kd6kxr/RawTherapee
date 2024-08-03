@@ -240,11 +240,11 @@ jobs:
             -DCMAKE_AR=/usr/bin/ar \
             -DCMAKE_RANLIB=/usr/bin/ranlib \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
-            -DCONTINUOUS=ON \
+            -DOSX_CONTINUOUS=ON \
             -DCODESIGNID:STRING="$IDENT" \
             -DNOTARY:STRING="$NOTARIZATION" \
             -DLOCAL_PREFIX=/opt/homebrew \
-            -DUNIVERSAL_URL=https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"${{ github.ref }}"_macOS_x86_64_Release.zip \
+            -DOSX_UNIVERSAL_URL=https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"${{ github.ref }}"_macOS_x86_64_Release.zip \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
