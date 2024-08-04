@@ -72,6 +72,8 @@ jobs:
           # name only (new-feature)
           export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/}
+          echo "RawTherapee Version =" $RAW_THERAPEE_VERSION
+          echo REF= "$REF"
           export C_FLAGS=$(echo -e $C_FLAGS | tr -d '\n')
           cd build && date -u && date +%s > configstamp
           export NOTARIZATION=$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password $NOTARY)
@@ -216,6 +218,8 @@ jobs:
           # name only (new-feature)
           export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/}
+          echo "RawTherapee Version =" $RAW_THERAPEE_VERSION
+          echo REF= "$REF"
           export C_FLAGS=$(echo -e $C_FLAGS | tr -d '\n')
           cd build && date -u && date +%s > configstamp
           export NOTARIZATION=$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password $NOTARY)
