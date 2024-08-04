@@ -123,7 +123,7 @@ jobs:
           # https://github.com/actions/starter-workflows/issues/68
           echo "ARTIFACT_PATH=${GITHUB_WORKSPACE}/build/${ARTIFACT}" >> $GITHUB_ENV
           echo "ARTIFACT_FILE=${ARTIFACT}" >> $GITHUB_ENV
-          echo "artifact=${ARTIFACT}" >> $GITHUB_OUTPUT
+          echo "artifact=${ARTIFACT_FILE}" >> $GITHUB_OUTPUT
           zsh -c 'echo "Bundled in $(printf "%0.2f" $(($[$(date +%s)-$(cat bundlestamp)]/$((60.))))) minutes"'
           printf '%s\n' \
           "REF: ${REF}" \
@@ -248,6 +248,7 @@ jobs:
             -DCODESIGNID:STRING="$IDENT" \
             -DNOTARY:STRING="$NOTARIZATION" \
             -DLOCAL_PREFIX=/opt/homebrew \
+            -DFANCY_DMG=ON \
             -DOSX_UNIVERSAL=ON \
             -DOSX_UNIVERSAL_URL=https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$RAW_THERAPEE_VERSION"_macOS_x86_64_Release.zip \
             ..
