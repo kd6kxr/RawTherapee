@@ -327,4 +327,5 @@ jobs:
           sudo cp -R RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
-          check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ '^.*rawtherapee.*$' ]] ; then echo 'Success!' ; else exit 1 ; fi          osascript -e 'tell application "RawTherapee" to if it is running then quit'
+          check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ '^.*rawtherapee.*$' ]] ; then echo 'Success!' ; else exit 1 ; fi
+          osascript -e 'tell application "RawTherapee" to if it is running then quit'
