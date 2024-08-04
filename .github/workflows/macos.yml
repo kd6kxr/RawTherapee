@@ -122,11 +122,11 @@ jobs:
           echo "ARTIFACT_FILE=${ARTIFACT}" >> $GITHUB_ENV
           zsh -c 'echo "Bundled in $(printf "%0.2f" $(($[$(date +%s)-$(cat bundlestamp)]/$((60.))))) minutes"'
           printf '%s\n' \
-            "REF: ${REF}" \
-            "ARTIFACT: ${ARTIFACT}" \
-            "ARTIFACT_PATH: ${ARTIFACT_PATH}" \
-            "ARTIFACT_FILE: ${ARTIFACT_FILE}" \
-            "PUBLISH_NAME: ${PUBLISH_NAME}"
+          "REF: ${REF}" \
+          "ARTIFACT: ${ARTIFACT}" \
+          "ARTIFACT_PATH: ${ARTIFACT_PATH}" \
+          "ARTIFACT_FILE: ${ARTIFACT_FILE}" \
+          "PUBLISH_NAME: ${PUBLISH_NAME}"
           exit
       - uses: actions/upload-artifact@v4
         with:
