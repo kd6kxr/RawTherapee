@@ -313,7 +313,7 @@ jobs:
           export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] ; then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/}
           cd && mkdir test && cd test
-          curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_universal_macOS_universal_Release.zip  -o rt.zip
+          curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip  -o rt.zip
           unzip rt.zip
           cd RawTherapee*
           yes qy | hdiutil attach *dmg
