@@ -97,7 +97,7 @@ jobs:
             -DCMAKE_AR=/usr/bin/ar \
             -DCMAKE_RANLIB=/usr/bin/ranlib \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
-            -DCONTINUOUS=ON \
+            -DOSX_CONTINUOUS=ON \
             -DCODESIGNID:STRING="$IDENT" \
             -DNOTARY:STRING="$NOTARIZATION" \
             ..
