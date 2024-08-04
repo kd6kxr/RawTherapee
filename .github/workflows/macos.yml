@@ -2,13 +2,13 @@ name: macOS Build
 on:
   push:
     branches:
-      - universal
+      - dev
       - 'release-[0-9]+.*'
     tags:
       - '[0-9]+.*'
   pull_request:
     branches:
-      - universal
+      - dev
       - 'release-[0-9]+.*'
   workflow_dispatch:
 
@@ -113,6 +113,7 @@ jobs:
         run: |
           zsh
           date +%s > build/bundlestamp && date -u && cd build
+          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
           export REF=${GITHUB_REF##*/} && sudo make macosx_bundle
           export ARTIFACT=(RawTherapee*${CMAKE_BUILD_TYPE}.zip)
           echo "=== artifact: ${ARTIFACT}"
@@ -139,7 +140,7 @@ jobs:
 
       - name: Publish artifacts
         uses: softprops/action-gh-release@v2
-        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' || github.ref_name == 'universal' }}
+        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' }}
         with:
           tag_name: nightly-github-actions
           files: |
@@ -257,6 +258,7 @@ jobs:
         run: |
           zsh
           date +%s > build/bundlestamp && date -u && cd build
+          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
           export REF=${GITHUB_REF##*/} && sudo make macosx_bundle
           export ARTIFACT=(RawTherapee*${CMAKE_BUILD_TYPE}.zip)
           echo "=== artifact: ${ARTIFACT}"
@@ -266,11 +268,11 @@ jobs:
           echo "ARTIFACT_FILE=${ARTIFACT}" >> $GITHUB_ENV
           zsh -c 'echo "Bundled in $(printf "%0.2f" $(($[$(date +%s)-$(cat bundlestamp)]/$((60.))))) minutes"'
           printf '%s\n' \
-            "REF: ${REF}" \
-            "ARTIFACT: ${ARTIFACT}" \
-            "ARTIFACT_PATH: ${ARTIFACT_PATH}" \
-            "ARTIFACT_FILE: ${ARTIFACT_FILE}" \
-            "PUBLISH_NAME: ${PUBLISH_NAME}"
+          "REF: ${REF}" \
+          "ARTIFACT: ${ARTIFACT}" \
+          "ARTIFACT_PATH: ${ARTIFACT_PATH}" \
+          "ARTIFACT_FILE: ${ARTIFACT_FILE}" \
+          "PUBLISH_NAME: ${PUBLISH_NAME}"
           exit
       - uses: actions/upload-artifact@v4
         with:
@@ -283,7 +285,7 @@ jobs:
 
       - name: Publish artifacts
         uses: softprops/action-gh-release@v2
-        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' || github.ref_name == 'universal'}}
+        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' }}
         with:
           tag_name: nightly-github-actions
           files: |
