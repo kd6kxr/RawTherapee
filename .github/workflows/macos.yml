@@ -2,14 +2,14 @@ name: macOS Build
 on:
   push:
     branches:
-      - dev
+      - universal
       - releases
       - 'release-[0-9]+.*'
     tags:
       - '[0-9]+.*'
   pull_request:
     branches:
-      - dev
+      - universal
       - releases
       - 'release-[0-9]+.*'
   workflow_dispatch:
