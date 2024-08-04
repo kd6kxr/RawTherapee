@@ -304,6 +304,8 @@ jobs:
     steps:
       - name: Verify Universal App on x86_64
         run: |
+          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
+          export REF=${GITHUB_REF##*/}
           cd && mkdir test && cd test
           curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_universal_macOS_universal_Release.zip  -o rt.zip
           unzip rt.zip
