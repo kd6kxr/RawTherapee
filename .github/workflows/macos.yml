@@ -2,20 +2,18 @@ name: macOS Build
 on:
   push:
     branches:
-      - dev
-      - releases
+      - universal
       - 'release-[0-9]+.*'
     tags:
       - '[0-9]+.*'
   pull_request:
     branches:
-      - dev
-      - releases
+      - universal
       - 'release-[0-9]+.*'
   workflow_dispatch:
 
 jobs:
-  build:
+  intelbuild:
     runs-on: macos-12
     steps:
       - uses: actions/checkout@v4
@@ -99,7 +97,7 @@ jobs:
             -DCMAKE_AR=/usr/bin/ar \
             -DCMAKE_RANLIB=/usr/bin/ranlib \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
-            -DCONTINUOUS=ON \
+            -DOSX_CONTINUOUS=ON \
             -DCODESIGNID:STRING="$IDENT" \
             -DNOTARY:STRING="$NOTARIZATION" \
             ..
@@ -115,7 +113,7 @@ jobs:
         run: |
           zsh
           date +%s > build/bundlestamp && date -u && cd build
-          export REF=${GITHUB_REF##*/} && export LOCAL_PREFIX=/usr && sudo make macosx_bundle
+          export REF=${GITHUB_REF##*/} && sudo make macosx_bundle
           export ARTIFACT=(RawTherapee*${CMAKE_BUILD_TYPE}.zip)
           echo "=== artifact: ${ARTIFACT}"
           # defining environment variables for next step as per
@@ -124,11 +122,11 @@ jobs:
           echo "ARTIFACT_FILE=${ARTIFACT}" >> $GITHUB_ENV
           zsh -c 'echo "Bundled in $(printf "%0.2f" $(($[$(date +%s)-$(cat bundlestamp)]/$((60.))))) minutes"'
           printf '%s\n' \
-            "REF: ${REF}" \
-            "ARTIFACT: ${ARTIFACT}" \
-            "ARTIFACT_PATH: ${ARTIFACT_PATH}" \
-            "ARTIFACT_FILE: ${ARTIFACT_FILE}" \
-            "PUBLISH_NAME: ${PUBLISH_NAME}"
+          "REF: ${REF}" \
+          "ARTIFACT: ${ARTIFACT}" \
+          "ARTIFACT_PATH: ${ARTIFACT_PATH}" \
+          "ARTIFACT_FILE: ${ARTIFACT_FILE}" \
+          "PUBLISH_NAME: ${PUBLISH_NAME}"
           exit
       - uses: actions/upload-artifact@v4
         with:
@@ -141,7 +139,7 @@ jobs:
 
       - name: Publish artifacts
         uses: softprops/action-gh-release@v2
-        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev'}}
+        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' || github.ref_name == 'universal' }}
         with:
           tag_name: nightly-github-actions
           files: |
@@ -157,6 +155,7 @@ jobs:
 
 
   armbuild:
+    needs: intelbuild
     runs-on: macos-14
     steps:
       - name: Checkout repository
@@ -239,10 +238,12 @@ jobs:
             -DCMAKE_AR=/usr/bin/ar \
             -DCMAKE_RANLIB=/usr/bin/ranlib \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
-            -DCONTINUOUS=ON \
+            -DOSX_CONTINUOUS=ON \
             -DCODESIGNID:STRING="$IDENT" \
             -DNOTARY:STRING="$NOTARIZATION" \
             -DLOCAL_PREFIX=/opt/homebrew \
+            -DOSX_UNIVERSAL=ON \
+            -DOSX_UNIVERSAL_URL=https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$RAW_THERAPEE_VERSION"_macOS_x86_64_"$REF".zip \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
@@ -256,7 +257,7 @@ jobs:
         run: |
           zsh
           date +%s > build/bundlestamp && date -u && cd build
-          export REF=${GITHUB_REF##*/} && export LOCAL_PREFIX=/usr && sudo make macosx_bundle
+          export REF=${GITHUB_REF##*/} && sudo make macosx_bundle
           export ARTIFACT=(RawTherapee*${CMAKE_BUILD_TYPE}.zip)
           echo "=== artifact: ${ARTIFACT}"
           # defining environment variables for next step as per
@@ -282,7 +283,7 @@ jobs:
 
       - name: Publish artifacts
         uses: softprops/action-gh-release@v2
-        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev'}}
+        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' || github.ref_name == 'universal'}}
         with:
           tag_name: nightly-github-actions
           files: |
@@ -293,6 +294,26 @@ jobs:
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
           ls /Applications
           open -a /Applications/RawTherapee.app
+          sleep 5
+          osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
+          osascript -e 'tell application "RawTherapee" to if it is running then quit'
+
+  universaltest:
+    needs: armbuild
+    runs-on: macos-12
+    steps:
+      - name: Verify Universal App on x86_64
+        run: |
+          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
+          export REF=${GITHUB_REF##*/}
+          cd && mkdir test && cd test
+          curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_universal_macOS_universal_Release.zip  -o rt.zip
+          unzip rt.zip
+          cd RawTherapee*
+          yes qy | hdiutil attach *dmg
+          cd /Volumes/RawTherapee*
+          sudo cp -r RawTherapee.app /Applications
+          open -a RawTherapee.app
           sleep 5
           osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
