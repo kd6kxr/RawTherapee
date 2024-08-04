@@ -3,14 +3,12 @@ on:
   push:
     branches:
       - universal
-      - releases
       - 'release-[0-9]+.*'
     tags:
       - '[0-9]+.*'
   pull_request:
     branches:
       - universal
-      - releases
       - 'release-[0-9]+.*'
   workflow_dispatch:
 
@@ -245,7 +243,7 @@ jobs:
             -DNOTARY:STRING="$NOTARIZATION" \
             -DLOCAL_PREFIX=/opt/homebrew \
             -DOSX_UNIVERSAL=ON
-            -DOSX_UNIVERSAL_URL=https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"${{ github.ref }}"_macOS_x86_64_Release.zip \
+            -DOSX_UNIVERSAL_URL=https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$RAW_THERAPEE_VERSION"_macOS_x86_64_"$REF".zip \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
