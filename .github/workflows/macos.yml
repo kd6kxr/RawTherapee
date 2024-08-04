@@ -284,7 +284,7 @@ jobs:
 
       - name: Publish artifacts
         uses: softprops/action-gh-release@v2
-        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev'}}
+        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' || || github.ref_name == 'universal'}}
         with:
           tag_name: nightly-github-actions
           files: |
@@ -295,6 +295,24 @@ jobs:
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
           ls /Applications
           open -a /Applications/RawTherapee.app
+          sleep 5
+          osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
+          osascript -e 'tell application "RawTherapee" to if it is running then quit'
+
+  universaltest:
+    needs: armbuild
+    runs-on: macos-12
+    steps:
+      - name: Verify Universal App on x86_64
+        run: |
+          cd && mkdir test && cd test
+          curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_universal_macOS_universal_Release.zip  -o rt.zip
+          unzip rt.zip
+          cd RawTherapee*
+          yes qy | hdiutil attach *dmg
+          cd /Volumes/RawTherapee*
+          sudo cp -r RawTherapee.app /Applications
+          open -a RawTherapee.app
           sleep 5
           osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
