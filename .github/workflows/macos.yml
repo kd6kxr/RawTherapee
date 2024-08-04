@@ -319,11 +319,10 @@ jobs:
           cd && mkdir test && cd test
           curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip  -o rt.zip
           unzip rt.zip
-          cd RawTherapee*
+          cd Raw*folder
           yes y | hdiutil attach *dmg
           cd /Volumes/RawTherapee*
           sudo cp -R RawTherapee.app /Applications
           open -a RawTherapee.app
           sleep 5
-          osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
-          osascript -e 'tell application "RawTherapee" to if it is running then quit'
+          check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ '^.*rawtherapee.*$' ]] ; then echo 'Success!' ; else exit 1 ; fi          osascript -e 'tell application "RawTherapee" to if it is running then quit'
