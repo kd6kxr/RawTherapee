@@ -70,7 +70,7 @@ jobs:
           # GITHUB_REF is the ref that triggered the build, like
           # refs/heads/new-feature - the next line parses that to REF: the branch
           # name only (new-feature)
-          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
+          export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/}
           export C_FLAGS=$(echo -e $C_FLAGS | tr -d '\n')
           cd build && date -u && date +%s > configstamp
@@ -113,7 +113,7 @@ jobs:
         run: |
           zsh
           date +%s > build/bundlestamp && date -u && cd build
-          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
+          export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/} && sudo make macosx_bundle
           export ARTIFACT=(RawTherapee*${CMAKE_BUILD_TYPE}.zip)
           echo "=== artifact: ${ARTIFACT}"
@@ -214,7 +214,7 @@ jobs:
           # GITHUB_REF is the ref that triggered the build, like
           # refs/heads/new-feature - the next line parses that to REF: the branch
           # name only (new-feature)
-          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
+          export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/}
           export C_FLAGS=$(echo -e $C_FLAGS | tr -d '\n')
           cd build && date -u && date +%s > configstamp
@@ -258,7 +258,7 @@ jobs:
         run: |
           zsh
           date +%s > build/bundlestamp && date -u && cd build
-          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
+          export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/} && sudo make macosx_bundle
           export ARTIFACT=(RawTherapee*${CMAKE_BUILD_TYPE}.zip)
           echo "=== artifact: ${ARTIFACT}"
@@ -306,7 +306,7 @@ jobs:
     steps:
       - name: Verify Universal App on x86_64
         run: |
-          export RAW_THERAPEE_VERSION=$(git describe --tags | cut -f1,2 -d'.')
+          export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/}
           cd && mkdir test && cd test
           curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_universal_macOS_universal_Release.zip  -o rt.zip
