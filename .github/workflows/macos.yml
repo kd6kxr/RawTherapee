@@ -15,6 +15,8 @@ on:
 jobs:
   intelbuild:
     runs-on: macos-12
+    outputs:
+      artifact: ${{ steps.intelbuild.outputs.artifact }}
     steps:
       - uses: actions/checkout@v4
       - name: Install the Apple certificate and provisioning profile
@@ -301,6 +303,7 @@ jobs:
         uses: geekyeggo/delete-artifact@v5
         with:
           name: ${{needs.intelbuild.outputs.artifact}}
+          path: ${{needs.intelbuild.outputs.artifact-path}}
       - name: test app
         run: |
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
