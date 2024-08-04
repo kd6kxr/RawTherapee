@@ -294,7 +294,10 @@ jobs:
           tag_name: nightly-github-actions
           files: |
             ${{env.ARTIFACT_PATH}}
-          
+      - name: delete intel artifact
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: RawTherapee_"$REF"_macOS_x86_64_Release.zip
       - name: test app
         run: |
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
@@ -308,6 +311,7 @@ jobs:
     needs: armbuild
     runs-on: macos-12
     steps:
+      - uses: actions/checkout@v4
       - name: Verify Universal App on x86_64
         run: |
           export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] ; then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
@@ -316,9 +320,9 @@ jobs:
           curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip  -o rt.zip
           unzip rt.zip
           cd RawTherapee*
-          yes qy | hdiutil attach *dmg
+          yes y | hdiutil attach *dmg
           cd /Volumes/RawTherapee*
-          sudo cp -r RawTherapee.app /Applications
+          sudo cp -R RawTherapee.app /Applications
           open -a RawTherapee.app
           sleep 5
           osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
