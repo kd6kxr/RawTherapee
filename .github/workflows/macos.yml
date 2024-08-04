@@ -123,6 +123,7 @@ jobs:
           # https://github.com/actions/starter-workflows/issues/68
           echo "ARTIFACT_PATH=${GITHUB_WORKSPACE}/build/${ARTIFACT}" >> $GITHUB_ENV
           echo "ARTIFACT_FILE=${ARTIFACT}" >> $GITHUB_ENV
+          echo "artifact=${ARTIFACT}" >> $GITHUB_OUTPUT
           zsh -c 'echo "Bundled in $(printf "%0.2f" $(($[$(date +%s)-$(cat bundlestamp)]/$((60.))))) minutes"'
           printf '%s\n' \
           "REF: ${REF}" \
@@ -153,7 +154,7 @@ jobs:
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
-          osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
+          check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ '^.*rawtherapee.*$' ]] ; then echo 'Success!' ; else exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
 
 
@@ -294,17 +295,18 @@ jobs:
           tag_name: nightly-github-actions
           files: |
             ${{env.ARTIFACT_PATH}}
+            
       - name: delete intel artifact
         uses: geekyeggo/delete-artifact@v5
         with:
-          name: RawTherapee_"$REF"_macOS_x86_64_Release.zip
+          name: ${{ jobs.intelbuild.outputs.artifact }}
       - name: test app
         run: |
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
           ls /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
-          osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell'
+          check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ '^.*rawtherapee.*$' ]] ; then echo 'Success!' ; else exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
 
   universaltest:
