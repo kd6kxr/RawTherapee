@@ -141,7 +141,7 @@ jobs:
 
       - name: Publish artifacts
         uses: softprops/action-gh-release@v2
-        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev'}}
+        if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' || github.ref_name == 'universal' }}
         with:
           tag_name: nightly-github-actions
           files: |
