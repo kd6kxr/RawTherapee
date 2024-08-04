@@ -299,7 +299,7 @@ jobs:
       - name: delete intel artifact
         uses: geekyeggo/delete-artifact@v5
         with:
-          name: ${{ jobs.intelbuild.outputs.artifact }}
+          name: ${{needs.intelbuild.outputs.artifact}}
       - name: test app
         run: |
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
