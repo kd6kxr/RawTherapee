@@ -16,7 +16,7 @@ jobs:
   intelbuild:
     runs-on: macos-12
     outputs:
-      artifact: ${{ steps.intelbuild.outputs.artifact }}
+      artifact: '${{ steps.intelbuild.outputs.artifact }}'
     steps:
       - uses: actions/checkout@v4
       - name: Install the Apple certificate and provisioning profile
@@ -252,7 +252,7 @@ jobs:
             -DLOCAL_PREFIX=/opt/homebrew \
             -DFANCY_DMG=ON \
             -DOSX_UNIVERSAL=ON \
-            -DOSX_UNIVERSAL_URL="https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/*x86_64*" \
+            -DOSX_UNIVERSAL_URL="https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_$REF_macOS_x86_64_Release.zip" \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
@@ -302,7 +302,7 @@ jobs:
       - name: delete intel artifact
         uses: geekyeggo/delete-artifact@v5
         with:
-          name: *x86_64*
+          name: '**x86_64**'
           
       - name: test app
         run: |
