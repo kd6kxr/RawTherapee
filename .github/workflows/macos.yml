@@ -252,7 +252,7 @@ jobs:
             -DLOCAL_PREFIX=/opt/homebrew \
             -DFANCY_DMG=ON \
             -DOSX_UNIVERSAL=ON \
-            -DOSX_UNIVERSAL_URL=https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$RAW_THERAPEE_VERSION"_macOS_x86_64_Release.zip \
+            -DOSX_UNIVERSAL_URL=https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/${{needs.intelbuild.outputs.artifact}} \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
