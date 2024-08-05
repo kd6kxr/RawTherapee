@@ -82,8 +82,8 @@ if [[ -x $(which git) && -d $PROJECT_SOURCE_DIR/.git ]]; then
     fi
     ### Copy end.
 
-    PROJECT_FULL_VERSION="$gitDescribe"
-    PROJECT_VERSION="$gitVersionNumericBS"
+    PROJECT_FULL_VERSION="${gitDescribe}"
+    PROJECT_VERSION="${gitVersionNumericBS}"
 fi
 
 #In: CMAKE_OSX_DEPLOYMENT_TARGET=11.3
