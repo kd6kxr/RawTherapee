@@ -36,7 +36,7 @@ jobs:
       run: |
         zsh
         hwmemsize=$(sysctl -n hw.memsize)
-        ramsize=$(( $hwmemsize / $((1073741824.0)) ))
+        zsh -c 'ramsize=$(($hwmemsize / $((1073741824.))))'
         echo "ramsize=$ramsize" >> $GITHUB_OUTPUT
         exit
         
@@ -52,11 +52,11 @@ jobs:
       run: |
         zsh
         hwmemsize=$(sysctl -n hw.memsize)
-        ramsize=$(( $hwmemsize / $((1073741824.0)) ))
+        zsh -c 'ramsize=$(($hwmemsize / $((1073741824.))))'
   
         echo "<hr>" \
         "**mac-arm64** RAM: ${ramsize} GB<br>" \
         "**mac-intel** RAM: $INTEL_RAM GB<br>" \
-        "**windows**   RAM: $(( $WINDOWS_RAM / $((1073741824.0)) )) GB<br>" \
-        "**linux**     RAM: $(( $LINUX_RAM / $((1048576.0)) )) GB<br><hr>" >> $GITHUB_STEP_SUMMARY
+        "**windows**   RAM: $(zsh -c 'echo $(($WINDOWS_RAM / $((1073741824.)))))' GB<br>" \
+        "**linux**     RAM: $(zsh -c 'echo $(($LINUX_RAM / $((1048576.0)))))' GB<br><hr>" >> $GITHUB_STEP_SUMMARY
         exit
