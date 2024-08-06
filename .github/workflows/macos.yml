@@ -36,7 +36,7 @@ jobs:
       run: |
         zsh
         hwmemsize=$(sysctl -n hw.memsize)
-        zsh -c 'ramsize=$(($hwmemsize / $((1073741824.))))'
+        zsh -c 'ramsize=$(expr $(($hwmemsize / $((1073741824.)))))'
         echo "ramsize=$ramsize" >> $GITHUB_OUTPUT
         exit
         
@@ -52,7 +52,7 @@ jobs:
       run: |
         zsh
         hwmemsize=$(sysctl -n hw.memsize)
-        zsh -c 'ramsize=$(($hwmemsize / $((1073741824.))))'
+        zsh -c 'ramsize=$(expr $(($hwmemsize / $((1073741824.)))))'
   
         echo "<hr>" \
         "**mac-arm64** RAM: ${ramsize} GB<br>" \
