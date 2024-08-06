@@ -54,11 +54,10 @@ jobs:
         hwmemsize=$(sysctl -n hw.memsize)
         # 1024**3 = GB
         ramsize=$(( $hwmemsize / $((1024**3)) ))
-        echo "macOS:"
-        echo "arm64 RAM: ${ramsize} GB"
-        echo "intel RAM: $INTEL_RAM GB"
-        echo "Win11:"
-        echo "windows RAM: $(( $WINDOWS_RAM / $((1024**3)) )) GB"
-        echo "ubuntu:"
-        echo "linux RAM: $(( $LINUX_RAM / $((1024**2)) )) GB"
+  
+        echo \
+        "**mac-arm64** RAM: ${ramsize} GB\n" \
+        "**mac-intel** RAM: $INTEL_RAM GB\n" \
+        "**windows**   RAM: $(( $WINDOWS_RAM / $((1024**3)) )) GB\n" \
+        "**linux**     RAM: $(( $LINUX_RAM / $((1024**2)) )) GB" >> $GITHUB_STEP_SUMMARY
         exit
