@@ -15,8 +15,6 @@ on:
 jobs:
   intelbuild:
     runs-on: macos-12
-    outputs:
-      artifact: ${{ steps.gen.outputs.file }}
     steps:
       - uses: actions/checkout@v4
       - name: Install the Apple certificate and provisioning profile
@@ -114,7 +112,6 @@ jobs:
           make -j$(sysctl -a | grep machdep.cpu.thread_count | tail -c 2) install
           zsh -c 'echo "Compiled in $(printf "%0.2f" $(($[$(date +%s)-$(cat compilestamp)]/$((60.))))) minutes"'
       - name: Create application bundle
-        id: gen
         run: |
           zsh
           date +%s > build/bundlestamp && date -u && cd build
@@ -126,7 +123,6 @@ jobs:
           # https://github.com/actions/starter-workflows/issues/68
           echo "ARTIFACT_PATH=${GITHUB_WORKSPACE}/build/${ARTIFACT}" >> $GITHUB_ENV
           echo "ARTIFACT_FILE=${ARTIFACT}" >> "$GITHUB_ENV"
-          echo "file=${ARTIFACT_FILE}" >> "$GITHUB_OUTPUT"
           zsh -c 'echo "Bundled in $(printf "%0.2f" $(($[$(date +%s)-$(cat bundlestamp)]/$((60.))))) minutes"'
           printf '%s\n' \
           "REF: ${REF}" \
@@ -163,8 +159,6 @@ jobs:
 
   armbuild:
     needs: intelbuild
-    env:
-      ARTIFACT: ${{ needs.inteLbuild.outputs.artifact }}
     runs-on: macos-14
     steps:
       - name: Checkout repository
@@ -302,11 +296,6 @@ jobs:
           tag_name: nightly-github-actions
           files: |
             ${{env.ARTIFACT_PATH}}
-            
-      - name: delete intel artifact
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: ${{env.ARTIFACT}}
           
       - name: test app
         run: |
