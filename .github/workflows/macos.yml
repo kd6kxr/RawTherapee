@@ -49,6 +49,7 @@ jobs:
     steps:
     - name: Test RAM on arm64
       run: |
+        zsh
         hwmemsize=$(sysctl -n hw.memsize)
         # 1024**3 = GB
         ramsize=$(expr $hwmemsize / $((1024**3)))
@@ -58,4 +59,5 @@ jobs:
         echo "Win11:"
         echo "windows RAM: $WINDOWS_RAM GB"
         echo "ubuntu:"
-        echo "linux RAM: ${$LINUX_RAM / 1048576} GB"
+        echo "linux RAM: $(($LINUX_RAM / 1048576)) GB"
+        exit
