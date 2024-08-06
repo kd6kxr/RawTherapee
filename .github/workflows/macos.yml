@@ -58,4 +58,4 @@ jobs:
         echo "Win11:"
         echo "windows RAM: $WINDOWS_RAM GB"
         echo "ubuntu:"
-        echo "linux RAM: $(($LINUX_RAM / 1048576.)) GB"
+        echo "linux RAM: ${$LINUX_RAM / 1048576} GB"
