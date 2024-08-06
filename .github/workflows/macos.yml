@@ -14,7 +14,7 @@ jobs:
     - id: testwin
       shell: pwsh
       run: |
-          ramsize=((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property capacity -Sum).sum /1gb)
+          ramsize=$((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property capacity -Sum).sum /1gb)
           echo "ramsize=$ramsize" >> $GITHUB_OUTPUT
 
   linux:
@@ -24,9 +24,7 @@ jobs:
     steps:
     - id: testlinux
       run: |
-        hwmemsize=$(sysctl -n hw.memsize)
-        # 1024**3 = GB
-        ramsize=$(expr $hwmemsize / $((1024**3)))
+        ramsize=$(free -g)
         echo "ramsize=$ramsize" >> $GITHUB_OUTPUT
 
   intel:
