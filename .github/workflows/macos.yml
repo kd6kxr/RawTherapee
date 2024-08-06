@@ -34,11 +34,9 @@ jobs:
     steps:
     - id: testintelmac
       run: |
-        zsh
         hwmemsize=$(sysctl -n hw.memsize)
-        ramsize=$(zsh -c 'ramsize=$(($hwmemsize / $((1073741824.)))) && echo $ramsize')
+        ramsize=$(mem=$hwmemsize zsh -c 'ramsize=$(($mem / $((1073741824.)))) && echo $ramsize')
         echo "ramsize=$ramsize" >> $GITHUB_OUTPUT
-        exit
         
   arm64:
     runs-on: macos-14
@@ -50,12 +48,10 @@ jobs:
     steps:
     - name: Test RAM on arm64
       run: |
-        zsh
         hwmemsize=$(sysctl -n hw.memsize)
-        ramsize=$(zsh -c 'ramsize=$(($hwmemsize / $((1073741824.)))) && echo $ramsize')
+        ramsize=$(mem=$hwmemsize zsh -c 'ramsize=$(($mem / $((1073741824.)))) && echo $ramsize')
         linuxsize=$(zsh -c 'echo $(($LINUX_RAM / $((1048576.0))))')
         winsize=$(zsh -c 'echo $(($WINDOWS_RAM / $((1073741824.))))')
-  
         echo "<hr>" \
         "**mac-arm64** RAM: ${ramsize} GB<br>" \
         "**mac-intel** RAM: $INTEL_RAM GB<br>" \
