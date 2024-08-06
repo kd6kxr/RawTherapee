@@ -56,6 +56,6 @@ jobs:
         echo "arm64 RAM: ${ramsize} GB"
         echo "intel RAM: $INTEL_RAM GB"
         echo "Win11:"
-        echo "windows RAM: $(($WINDOWS_RAM / 1048576.)) GB"
+        echo "windows RAM: $WINDOWS_RAM GB"
         echo "ubuntu:"
-        echo "linux RAM: $LINUX_RAM GB"
+        echo "linux RAM: $(($LINUX_RAM / 1048576.)) GB"
