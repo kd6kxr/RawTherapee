@@ -24,10 +24,9 @@ jobs:
     steps:
     - id: testlinux
       run: |
-        zsh
         ramsize=$(grep MemTotal /proc/meminfo | cut -f2 -d':' | cut -f8 -d' ')
         echo "ramsize=$ramsize" >> "$GITHUB_OUTPUT"
-        exit
+        
   intel:
     runs-on: macos-13
     outputs:
