@@ -14,8 +14,8 @@ jobs:
     - id: testwin
       shell: pwsh
       run: |
-          ramsize=$((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property capacity -Sum).sum /1gb)
-          echo "ramsize=$ramsize" >> $GITHUB_OUTPUT
+          ramsize="$((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property capacity -Sum).sum /1gb)"
+          echo "ramsize=$ramsize" >> "$GITHUB_OUTPUT"
 
   linux:
     runs-on: ubuntu-latest
@@ -24,8 +24,8 @@ jobs:
     steps:
     - id: testlinux
       run: |
-        ramsize=$(free -g)
-        echo "ramsize=$ramsize" >> $GITHUB_OUTPUT
+        ramsize="$(free -h -g)"
+        echo "ramsize=$ramsize" >> "$GITHUB_OUTPUT"
 
   intel:
     runs-on: macos-13
