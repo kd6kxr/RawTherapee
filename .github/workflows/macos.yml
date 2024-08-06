@@ -15,7 +15,7 @@ jobs:
       shell: pwsh
       run: |
           $ramsize = $(Get-WMIObject win32_ComputerSystem | foreach {[math]::truncate($_.TotalPhysicalMemory /1GB)})
-          Write-Output "ramsize=${ramsize}" >> $Env.GITHUB_OUTPUT
+          echo "ramsize=${ramsize}" >> $env:GITHUB_OUTPUT
 
   linux:
     runs-on: ubuntu-latest
