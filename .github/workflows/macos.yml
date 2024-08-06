@@ -43,7 +43,7 @@ jobs:
 
   arm64:
     runs-on: macos-14
-    needs: intel
+    needs: [intel, windows, linux]
     env:
       INTEL_RAM: ${{ needs.intel.outputs.size }}
       LINUX_RAM: ${{ needs.linux.outputs.size }}
