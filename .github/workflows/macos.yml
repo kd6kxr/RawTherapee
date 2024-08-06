@@ -52,9 +52,16 @@ jobs:
         ramsize=$(mem=$hwmemsize zsh -c 'ramsize=$(($mem / $((1073741824.0)))) && echo $ramsize')
         linuxsize=$(zsh -c 'echo $(($LINUX_RAM / $((1048576.0))))')
         winsize=$(zsh -c 'echo $(($WINDOWS_RAM / $((1073741824.0))))')
-        echo "<hr>
+        echo "
+
+        ---
+        
         **mac-arm64** RAM: ${ramsize} GB
         **mac-intel** RAM: $INTEL_RAM GB
         **windows**   RAM: ${winsize} GB
-        **linux**     RAM: ${linuxsize} GB<hr>" >> $GITHUB_STEP_SUMMARY
+        **linux**     RAM: ${linuxsize} GB
+        
+        ---
+        
+        " >> $GITHUB_STEP_SUMMARY
         exit
