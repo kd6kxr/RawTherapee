@@ -52,8 +52,9 @@ jobs:
         ramsize=$(printf "%.3f" $(mem=$hwmemsize zsh -c 'ramsize=$(($mem / $((1073741824.0)))) && echo $ramsize'))
         linuxsize=$(printf "%.3f" $(mem=$LINUX_RAM zsh -c 'echo $(($mem / $((1048576.0))))'))
         winsize=$(printf "%.3f" $(mem=$WINDOWS_RAM zsh -c 'echo $(($mem / $((1073741824.0))))'))
-        intelsize=$(printf "%.3f" $(mem=$INTEL_RAM zsh -c 'echo $(($mem / $((1073741824.0))))'))
+        intelsize=$(printf '%.3f' "$INTEL_RAM")
         echo "
+        
         ---
         
         **mac-arm64** RAM: ${ramsize} GB
