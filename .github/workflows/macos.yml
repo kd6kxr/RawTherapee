@@ -18,7 +18,7 @@ jobs:
     runs-on: macos-14
     needs: intel
     env:
-      INTEL_RAM: ${{ jobs.intel.outputs.ramsize }}
+      INTEL_RAM: ${{ needs.intel.outputs.ramsize }}
     steps:
     - name: Test RAM on arm64
       run: |
