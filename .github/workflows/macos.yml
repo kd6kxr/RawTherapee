@@ -49,15 +49,15 @@ jobs:
     - name: Test RAM on arm64
       run: |
         hwmemsize=$(sysctl -n hw.memsize)
-        ramsize=$(mem=$hwmemsize zsh -c 'ramsize=$(($mem / $((1073741824.0)))) && echo $ramsize')
-        linuxsize=$(mem=$LINUX_RAM zsh -c 'echo $(($mem / $((1048576.0))))')
-        winsize=$(mem=$WINDOWS_RAM zsh -c 'echo $(($mem / $((1073741824.0))))')
+        ramsize=$(printf "%.3f" $(mem=$hwmemsize zsh -c 'ramsize=$(($mem / $((1073741824.0)))) && echo $ramsize'))
+        linuxsize=$(printf "%.3f" $(mem=$LINUX_RAM zsh -c 'echo $(($mem / $((1048576.0))))'))
+        winsize=$(printf "%.3f" $(mem=$WINDOWS_RAM zsh -c 'echo $(($mem / $((1073741824.0))))'))
+        intelsize=$(printf "%.3f" $(mem=$INTEL_RAM zsh -c 'echo $(($mem / $((1073741824.0))))'))
         echo "
-
         ---
         
         **mac-arm64** RAM: ${ramsize} GB
-        **mac-intel** RAM: $INTEL_RAM GB
+        **mac-intel** RAM: ${intelsize} GB
         **windows**   RAM: ${winsize} GB
         **linux**     RAM: ${linuxsize} GB
         
