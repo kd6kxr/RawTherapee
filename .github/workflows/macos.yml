@@ -150,6 +150,8 @@ jobs:
 
       - name: test app
         run: |
+          cd build
+          RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
@@ -299,8 +301,9 @@ jobs:
           
       - name: test app
         run: |
+          cd build
+          RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
-          ls /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
           re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else bye=1 ; fi && if [[ $bye == 1 ]] ; then exit 1 ; fi
@@ -318,6 +321,7 @@ jobs:
           cd && mkdir test && cd test
           curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip  -o rt.zip
           unzip rt.zip
+          RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           cd Raw*folder
           yes y | hdiutil attach *dmg
           cd /Volumes/RawTherapee*
