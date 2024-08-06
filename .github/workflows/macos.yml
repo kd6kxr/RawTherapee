@@ -25,7 +25,7 @@ jobs:
     - id: testlinux
       run: |
         zsh
-        ramsize=$[$[$(grep MemTotal /proc/meminfo | cut -f2 -d':' | cut -f8 -d' ')] / 1048576]
+        ramsize=$(grep MemTotal /proc/meminfo | cut -f2 -d':' | cut -f8 -d' ')
         echo "ramsize=$ramsize" >> "$GITHUB_OUTPUT"
         exit
   intel:
@@ -57,6 +57,6 @@ jobs:
         echo "arm64 RAM: ${ramsize} GB"
         echo "intel RAM: $INTEL_RAM GB"
         echo "Win11:"
-        echo "windows RAM: $WINDOWS_RAM GB"
+        echo "windows RAM: $[$WINDOWS_RAM / 1048576] GB"
         echo "ubuntu:"
         echo "linux RAM: $LINUX_RAM GB"
