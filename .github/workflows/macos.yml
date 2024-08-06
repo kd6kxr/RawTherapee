@@ -50,8 +50,8 @@ jobs:
       run: |
         hwmemsize=$(sysctl -n hw.memsize)
         ramsize=$(mem=$hwmemsize zsh -c 'ramsize=$(($mem / $((1073741824.0)))) && echo $ramsize')
-        linuxsize=$(zsh -c 'echo $(($LINUX_RAM / $((1048576.0))))')
-        winsize=$(zsh -c 'echo $(($WINDOWS_RAM / $((1073741824.0))))')
+        linuxsize=$(mem=$LINUX_RAM zsh -c 'echo $(($mem / $((1048576.0))))')
+        winsize=$(mem=$WINDOWS_RAM zsh -c 'echo $(($mem / $((1073741824.0))))')
         echo "
 
         ---
