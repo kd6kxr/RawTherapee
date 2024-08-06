@@ -113,7 +113,6 @@ jobs:
           zsh -c 'echo "Compiled in $(printf "%0.2f" $(($[$(date +%s)-$(cat compilestamp)]/$((60.))))) minutes"' >> $GITHUB_STEP_SUMMARY
       - name: Create application bundle
         run: |
-          zsh
           date +%s > build/bundlestamp && date -u && cd build
           export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] ; then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/} && sudo make macosx_bundle
@@ -130,7 +129,6 @@ jobs:
           "ARTIFACT_PATH: ${ARTIFACT_PATH}" \
           "ARTIFACT_FILE: ${ARTIFACT_FILE}" \
           "PUBLISH_NAME: ${PUBLISH_NAME}"
-          exit
       - uses: actions/upload-artifact@v4
         with:
           name: ${{env.ARTIFACT_FILE}}
