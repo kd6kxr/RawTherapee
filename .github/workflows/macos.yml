@@ -7,7 +7,10 @@ on:
 jobs:
   intel:
     runs-on: macos-13
+    outputs:
+      size: ${{ steps.test.outputs.ramsize }}
     steps:
+    id: test
       - name: Test RAM on intel
         run: |
           hwmemsize=$(sysctl -n hw.memsize)
@@ -19,7 +22,7 @@ jobs:
     runs-on: macos-14
     needs: intel
     env:
-      INTEL_RAM: ${{ needs.intel.outputs.ramsize }}
+      INTEL_RAM: ${{ needs.intel.outputs.size }}
     steps:
     - name: Test RAM on arm64
       run: |
