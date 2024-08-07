@@ -153,7 +153,8 @@ jobs:
           RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a /Applications/RawTherapee.app
           sleep 5
-          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else bye=1 ; fi ; if [[ $bye == 1 ]] ; then exit 1 ; fi
+          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else export bye=1 ; fi
+          if [[ $bye == 1 ]] ; then exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
 
 
@@ -304,7 +305,8 @@ jobs:
           RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a /Applications/RawTherapee.app
           sleep 5
-          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else bye=1 ; fi ; if [[ $bye == 1 ]] ; then exit 1 ; fi
+          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else export bye=1 ; fi
+          if [[ $bye == 1 ]] ; then exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
 
   universaltest:
@@ -326,5 +328,6 @@ jobs:
           RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a /Applications/RawTherapee.app
           sleep 5
-          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else bye=1 ; fi ; if [[ $bye == 1 ]] ; then exit 1 ; fi
+          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else export bye=1 ; fi
+          if [[ $bye == 1 ]] ; then exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
