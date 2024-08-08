@@ -149,14 +149,12 @@ jobs:
       - name: test app
         run: |
           cd build
-          sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
-          RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
-          open -a /Applications/RawTherapee.app
+          sudo cp -R RawTherapee.app /Applications
+          open -a RawTherapee
           sleep 5
-          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else export bye=1 ; fi
-          if [[ $bye == 1 ]] ; then exit 1 ; fi
+          echo "Applications running: $(osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell')" >> $GITHUB_STEP_SUMMARY
+          osascript -e 'if application "RawTherapee" is not running then do shell script "exit 1"'
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
-
 
   armbuild:
     needs: intelbuild
@@ -301,12 +299,11 @@ jobs:
       - name: test app
         run: |
           cd build
-          sudo cp -R /Users/runner/work/RawTherapee/RawTherapee/build/RawTherapee.app /Applications
-          RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
-          open -a /Applications/RawTherapee.app
+          sudo cp -R RawTherapee.app /Applications
+          open -a RawTherapee
           sleep 5
-          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else export bye=1 ; fi
-          if [[ $bye == 1 ]] ; then exit 1 ; fi
+          echo "Applications running: $(osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell')" >> $GITHUB_STEP_SUMMARY
+          osascript -e 'if application "RawTherapee" is not running then do shell script "exit 1"'
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
 
   universaltest:
@@ -328,6 +325,6 @@ jobs:
           RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a /Applications/RawTherapee.app
           sleep 5
-          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo "Launch: Success!" >> $GITHUB_STEP_SUMMARY ; else export bye=1 ; fi
-          if [[ $bye == 1 ]] ; then exit 1 ; fi
+          echo "Applications running: $(osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell')" >> $GITHUB_STEP_SUMMARY
+          osascript -e 'if application "RawTherapee" is not running then do shell script "exit 1"'
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
