@@ -150,6 +150,7 @@ jobs:
         run: |
           cd build
           sudo cp -R RawTherapee.app /Applications
+          RawTherapee_*folder/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a RawTherapee
           sleep 5
           echo "Applications running: $(osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell')" >> $GITHUB_STEP_SUMMARY
@@ -300,6 +301,7 @@ jobs:
         run: |
           cd build
           sudo cp -R RawTherapee.app /Applications
+          RawTherapee_*folder/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a RawTherapee
           sleep 5
           echo "Applications running: $(osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell')" >> $GITHUB_STEP_SUMMARY
@@ -322,7 +324,6 @@ jobs:
           yes y | hdiutil attach *dmg
           cd /Volumes/RawTherapee*
           sudo cp -R RawTherapee.app /Applications
-          RawTherapee_*/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a /Applications/RawTherapee.app
           sleep 5
           echo "Applications running: $(osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell')" >> $GITHUB_STEP_SUMMARY
