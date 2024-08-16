@@ -82,8 +82,8 @@ if [[ -x $(which git) && -d $PROJECT_SOURCE_DIR/.git ]]; then
     fi
     ### Copy end.
 
-    PROJECT_FULL_VERSION="$gitDescribe"
-    PROJECT_VERSION="$gitVersionNumericBS"
+    PROJECT_FULL_VERSION="${gitDescribe}"
+    PROJECT_VERSION="${gitVersionNumericBS}"
 fi
 
 #In: CMAKE_OSX_DEPLOYMENT_TARGET=11.3
@@ -427,9 +427,7 @@ function CreateDmg {
     msg "Creating disk image:"
     if [[ $FANCY_DMG == "ON" ]]; then
         echo "Building Fancy .dmg"
-        MESSAGE="$(cat message)"
-        magick ${PROJECT_SOURCE_DATA_DIR}/rtdmg-bkgd.png -pointsize 80 -fill Black -draw "text 14,1307 '${PROJECT_FULL_VERSION}'" -fill Salmon -draw "text 10,1300 '${PROJECT_FULL_VERSION}'" ./rtdmg-bkgd.png
-        magick ./rtdmg-bkgd.png -pointsize 90 -fill Black -gravity center -font Menlo-Bold -draw "text 5,120 \"$MESSAGE\"" -fill Red -gravity center -font Menlo-Bold -draw "text 1,124 \"$MESSAGE\"" ./rtdmg-bkgd.png
+        magick "${PROJECT_SOURCE_DATA_DIR}/rtdmg-bkgd.png" -pointsize 80 -fill Black -draw "text 14,1307 '${PROJECT_FULL_VERSION}'" -fill Salmon -draw "text 10,1300 '${PROJECT_FULL_VERSION}'" ./rtdmg-bkgd.png
         create-dmg \
         --background ./rtdmg-bkgd.png \
         --volname ${PROJECT_NAME}_${PROJECT_FULL_VERSION} \
