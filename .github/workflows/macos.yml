@@ -146,16 +146,21 @@ jobs:
           files: |
             ${{env.ARTIFACT_PATH}}
 
-      - name: test app
+      - name: Test-launch the app
         run: |
           cd build
           sudo cp -R RawTherapee.app /Applications
-          RawTherapee_*folder/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a /Applications/RawTherapee.app
           sleep 5
-          echo "Applications running: $(osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell')" >> $GITHUB_STEP_SUMMARY
+          echo "Applications running: $(osascript -e 'tell application "Finder" to get the name of every process whose visible is true')" >> $GITHUB_STEP_SUMMARY
           osascript -e 'if application "RawTherapee" is not running then do shell script "exit 1"'
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
+
+      - name: Test the -cli
+        run: |
+          cd build
+          echo "$(RawTherapee*folder/rawtherapee-cli --version)" >> $GITHUB_STEP_SUMMARY
+
 
   armbuild:
     needs: intelbuild
@@ -297,16 +302,21 @@ jobs:
           files: |
             ${{env.ARTIFACT_PATH}}
           
-      - name: test app
+      - name: Test-launch the app
         run: |
           cd build
           sudo cp -R RawTherapee.app /Applications
-          RawTherapee_*folder/rawtherapee-cli --version >> $GITHUB_STEP_SUMMARY
           open -a /Applications/RawTherapee.app
           sleep 5
-          echo "Applications running: $(osascript -e 'tell application "Finder"' -e 'get the name of every process whose visible is true' -e 'end tell')" >> $GITHUB_STEP_SUMMARY
+          echo "Applications running: $(osascript -e 'tell application "Finder" to get the name of every process whose visible is true')" >> $GITHUB_STEP_SUMMARY
           osascript -e 'if application "RawTherapee" is not running then do shell script "exit 1"'
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
+
+      - name: Test the -cli
+        run: |
+          cd build
+          echo "$(RawTherapee*folder/rawtherapee-cli --version)" >> $GITHUB_STEP_SUMMARY
+
 
   universaltest:
     needs: armbuild
