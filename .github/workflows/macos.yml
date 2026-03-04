@@ -14,7 +14,7 @@ on:
 
 jobs:
   intelbuild:
-    runs-on: macos-12
+    runs-on: macos-15-intel
     outputs:
       artifact: ${{ steps.gen.outputs.file }}
     steps:
