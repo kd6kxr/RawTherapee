@@ -85,7 +85,7 @@ jobs:
           cd build
           export REF=${GITHUB_REF##*/}
           make -j$(sysctl -a | grep machdep.cpu.thread_count | tail -c 2) install
-          zsh -c 'echo "Compiled in $(printf "%0.2f" $(($[$(date +%s)-$(cat compilestamp)]/$((60.))))) minutes on $(sysctl -a | grep machdep.cpu.thread_count | tail -c 2) cores"' >> $GITHUB_STEP_SUMMARY
+          zsh -c 'echo "Compiled in $(printf "%0.2f" $(($[$(date +%s)-$(cat compilestamp)]/$((60.))))) minutes using $(sysctl -a | grep machdep.cpu.thread_count | tail -c 2) threads"' >> $GITHUB_STEP_SUMMARY
       - name: Create application bundle
         run: |
           zsh
