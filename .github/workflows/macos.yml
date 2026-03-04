@@ -319,7 +319,7 @@ jobs:
 
   universaltest:
     needs: armbuild
-    runs-on: macos-12
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - name: Verify Universal App on x86_64
