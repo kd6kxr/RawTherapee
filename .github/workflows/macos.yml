@@ -54,8 +54,8 @@ jobs:
           # import certificate to keychain
           echo "importing cert"
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -T /usr/bin/codesign
-          echo "setting list"
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          echo "NOT setting list"
+          # security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           echo "list"
           security list-keychain -d user -s $KEYCHAIN_PATH
 
