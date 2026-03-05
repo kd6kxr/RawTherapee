@@ -35,10 +35,17 @@ jobs:
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
 
+          # check if the files exist
+          ls $CERTIFICATE_PATH
+          ls $PP_PATH
+
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # keychain information and unlocked
+          security show-keychain-info $KEYCHAIN_PATH
 
           # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
@@ -50,8 +57,14 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
           # poll certificated identities
-          security find-identity -v -p codesigning
-          
+          security find-identity -v -p codesigning $KEYCHAIN_PATH
+
+          # check if the certificate was added
+          security find-certificate -a -p -c $CERTIFICATE_PATH $KEYCHAIN_PATH
+
+          # check if the provisioning profile was added
+          ls ~/Library/MobileDevice/Provisioning\ Profiles
+        
       - name: Install dependencies
         run: |
            date -u
@@ -142,6 +155,7 @@ jobs:
         with:
           name: ${{env.ARTIFACT_FILE}}
           path: ${{env.ARTIFACT_PATH}}
+
       - name: Finish build
         run: |
           date -u
@@ -163,6 +177,11 @@ jobs:
           re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo 'Success!' ; else exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
 
+      - name: Clean up keychain and provisioning profile
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          rm ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
 
   armbuild:
     needs: intelbuild
@@ -319,6 +338,12 @@ jobs:
           sleep 5
           re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo 'Success!' ; else exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
+
+      - name: Clean up keychain and provisioning profile
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          rm ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
 
   universaltest:
     needs: armbuild
