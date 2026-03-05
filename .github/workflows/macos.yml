@@ -23,12 +23,11 @@ jobs:
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
+          #PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
@@ -54,14 +53,14 @@ jobs:
           # import certificate to keychain
           echo "importing cert"
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -T /usr/bin/codesign
-          echo "NOT setting list"
-          # security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          echo "list"
+          echo "setting list"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          echo "listing"
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           # apply provisioning profile
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          #mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          #cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
           # poll certificated identities
           echo "polling idents"
@@ -72,7 +71,7 @@ jobs:
           security find-certificate -a -p -c $CERTIFICATE_PATH $KEYCHAIN_PATH
 
           # check if the provisioning profile was added
-          ls ~/Library/MobileDevice/Provisioning\ Profiles
+          #ls ~/Library/MobileDevice/Provisioning\ Profiles
         
       - name: Install dependencies
         run: |
