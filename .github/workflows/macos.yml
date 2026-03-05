@@ -14,7 +14,7 @@ on:
 
 jobs:
   intelbuild:
-    runs-on: macos-15-intel
+    runs-on: macos-26-intel
     outputs:
       artifact: ${{ steps.gen.outputs.file }}
     steps:
@@ -100,7 +100,7 @@ jobs:
             -DOpenMP_libomp_LIBRARY=/usr/local/opt/libomp/lib/libomp.dylib \
             -DCMAKE_AR=/usr/bin/ar \
             -DCMAKE_RANLIB=/usr/bin/ranlib \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=26.0 \
             -DOSX_CONTINUOUS=ON \
             -DCODESIGNID:STRING="${IDENT}" \
             -DNOTARY:STRING="${NOTARIZATION}" \
@@ -165,7 +165,7 @@ jobs:
     needs: intelbuild
     env:
       ARTIFACT: ${{ needs.inteLbuild.outputs.artifact }}
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -248,7 +248,7 @@ jobs:
             -DOpenMP_libomp_LIBRARY=/opt/homebrew/opt/libomp/lib/libomp.dylib \
             -DCMAKE_AR=/usr/bin/ar \
             -DCMAKE_RANLIB=/usr/bin/ranlib \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=26.0 \
             -DOSX_CONTINUOUS=ON \
             -DCODESIGNID:STRING="${IDENT}" \
             -DNOTARY:STRING="${NOTARIZATION}" \
