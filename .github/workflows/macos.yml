@@ -78,7 +78,7 @@ jobs:
           echo REF= "$REF"
           export C_FLAGS=$(echo -e $C_FLAGS | tr -d '\n')
           cd build && date -u && date +%s > configstamp
-          export NOTARIZATION=$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password $NOTARY)
+          export NOTARIZATION=$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password ${NOTARY})
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
@@ -102,8 +102,8 @@ jobs:
             -DCMAKE_RANLIB=/usr/bin/ranlib \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
             -DOSX_CONTINUOUS=ON \
-            -DCODESIGNID:STRING="$IDENT" \
-            -DNOTARY:STRING="$NOTARIZATION" \
+            -DCODESIGNID:STRING="${IDENT}" \
+            -DNOTARY:STRING="${NOTARIZATION}" \
             ..
             zsh -c 'echo "Configured in $(printf "%0.2f" $(($[$(date +%s)-$(cat configstamp)]/$((60.))))) minutes"'
       - name: Compile RawTherapee
@@ -228,7 +228,7 @@ jobs:
           echo REF="$REF"
           export C_FLAGS=$(echo -e $C_FLAGS | tr -d '\n')
           cd build && date -u && date +%s > configstamp
-          export NOTARIZATION=$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password $NOTARY)
+          export NOTARIZATION=$(echo --apple-id kd6kxr@gmail.com --team-id 5SJ86G6Q2R --password ${NOTARY})
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
@@ -250,8 +250,8 @@ jobs:
             -DCMAKE_RANLIB=/usr/bin/ranlib \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
             -DOSX_CONTINUOUS=ON \
-            -DCODESIGNID:STRING="$IDENT" \
-            -DNOTARY:STRING="$NOTARIZATION" \
+            -DCODESIGNID:STRING="${IDENT}" \
+            -DNOTARY:STRING="${NOTARIZATION}" \
             -DLOCAL_PREFIX=/opt/homebrew \
             -DFANCY_DMG=ON \
             -DOSX_UNIVERSAL=ON \
