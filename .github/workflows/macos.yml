@@ -40,15 +40,20 @@ jobs:
           ls $PP_PATH
 
           # create temporary keychain
+          echo "creating keychain"
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          echo "setting settings"
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          echo "unlocking"
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
           # keychain information and unlocked
           # security show-keychain-info $KEYCHAIN_PATH
 
           # import certificate to keychain
+          echo "importing cert"
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          echo "setting list"
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
@@ -57,9 +62,11 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
           # poll certificated identities
+          echo "polling idents"
           security find-identity -v -p codesigning $KEYCHAIN_PATH
 
           # check if the certificate was added
+          echo "cert check"
           security find-certificate -a -p -c $CERTIFICATE_PATH $KEYCHAIN_PATH
 
           # check if the provisioning profile was added
@@ -186,7 +193,7 @@ jobs:
   armbuild:
     needs: intelbuild
     env:
-      ARTIFACT: ${{ needs.inteLbuild.outputs.artifact }}
+      ARTIFACT: ${{ needs.intelbuild.outputs.artifact }}
     runs-on: macos-26
     steps:
       - name: Checkout repository
