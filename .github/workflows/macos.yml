@@ -19,7 +19,7 @@ jobs:
       artifact: ${{ steps.gen.outputs.file }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install the Apple certificate and provisioning profile
+      - name: Install the Apple certificate
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
@@ -27,16 +27,13 @@ jobs:
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          #PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
-          # import certificate and provisioning profile from secrets
+          # import certificate from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-          #echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
 
-          # check if the files exist
+          # check if the file exist
           ls $CERTIFICATE_PATH
-          ls $PP_PATH
 
           # create temporary keychain
           echo "creating keychain"
@@ -54,13 +51,9 @@ jobs:
           echo "importing cert"
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -T /usr/bin/codesign
           echo "setting list"
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH  > /dev/null 2>&1
           echo "listing"
           security list-keychain -d user -s $KEYCHAIN_PATH
-
-          # apply provisioning profile
-          #mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          #cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
           # poll certificated identities
           echo "polling idents"
@@ -69,9 +62,6 @@ jobs:
           # check if the certificate was added
           echo "cert check"
           security find-certificate -a -p -c $CERTIFICATE_PATH $KEYCHAIN_PATH
-
-          # check if the provisioning profile was added
-          #ls ~/Library/MobileDevice/Provisioning\ Profiles
         
       - name: Install dependencies
         run: |
@@ -199,35 +189,49 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install the Apple certificate and provisioning profile
+      - name: Install the Apple certificate
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
-          # import certificate and provisioning profile from secrets
+          # import certificate from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+
+          # check if the files exist
+          ls $CERTIFICATE_PATH
 
           # create temporary keychain
+          echo "creating keychain"
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security default-keychain -s $KEYCHAIN_PATH
+          echo "setting settings"
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          echo "unlocking"
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
+          # keychain information and unlocked
+          # security show-keychain-info $KEYCHAIN_PATH
+
           # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          echo "importing cert"
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -T /usr/bin/codesign
+          echo "setting list"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH  > /dev/null 2>&1
+          echo "listing"
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-          # apply provisioning profile
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          # poll certificated identities
+          echo "polling idents"
+          security find-identity -v -p codesigning $KEYCHAIN_PATH
+
+          # check if the certificate was added
+          echo "cert check"
+          security find-certificate -a -p -c $CERTIFICATE_PATH $KEYCHAIN_PATH
           
       - name: Install dependencies
         run: |
@@ -299,6 +303,7 @@ jobs:
         run: |
           zsh
           date +%s > build/bundlestamp && date -u && cd build
+          echo "CODESIGNED AND NOTARIZED" > message
           export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] ; then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/}
           sudo make macosx_bundle
