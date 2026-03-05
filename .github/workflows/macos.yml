@@ -14,7 +14,7 @@ on:
 
 jobs:
   intelbuild:
-    runs-on: macos-14-intel
+    runs-on: macos-15-intel
     outputs:
       artifact: ${{ steps.gen.outputs.file }}
     steps:
@@ -103,7 +103,7 @@ jobs:
             -DOpenMP_libomp_LIBRARY=/usr/local/opt/libomp/lib/libomp.dylib \
             -DCMAKE_AR=/usr/bin/ar \
             -DCMAKE_RANLIB=/usr/bin/ranlib \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
             -DOSX_CONTINUOUS=ON \
             -DCODESIGNID:STRING="${IDENT}" \
             -DNOTARY:STRING="${NOTARIZATION}" \
