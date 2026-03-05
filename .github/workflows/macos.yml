@@ -14,7 +14,7 @@ on:
 
 jobs:
   intelbuild:
-    runs-on: macos-26-intel
+    runs-on: macos-14-intel
     outputs:
       artifact: ${{ steps.gen.outputs.file }}
     steps:
@@ -48,6 +48,9 @@ jobs:
           # apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+          # poll certificated identities
+          security find-identity -v -p codesigning
           
       - name: Install dependencies
         run: |
@@ -100,7 +103,7 @@ jobs:
             -DOpenMP_libomp_LIBRARY=/usr/local/opt/libomp/lib/libomp.dylib \
             -DCMAKE_AR=/usr/bin/ar \
             -DCMAKE_RANLIB=/usr/bin/ranlib \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=26.0 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
             -DOSX_CONTINUOUS=ON \
             -DCODESIGNID:STRING="${IDENT}" \
             -DNOTARY:STRING="${NOTARIZATION}" \
