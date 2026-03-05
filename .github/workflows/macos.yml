@@ -42,6 +42,7 @@ jobs:
           # create temporary keychain
           echo "creating keychain"
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security default-keychain -s $KEYCHAIN_PATH
           echo "setting settings"
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           echo "unlocking"
@@ -52,9 +53,9 @@ jobs:
 
           # import certificate to keychain
           echo "importing cert"
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          # echo "setting list"
-          # security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -T /usr/bin/codesign
+          echo "setting list"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           echo "list"
           security list-keychain -d user -s $KEYCHAIN_PATH
 
@@ -86,7 +87,7 @@ jobs:
            zsh -c 'echo "Completed installation of dependencies in $(printf "%0.2f" $(($[$(date +%s)-$(cat build/stamp)]/$((60.))))) minutes"'
       - name: Configure build system
         env:
-          IDENT: 'Developer ID Application: Richard Barber (5SJ86G6Q2R)'
+          IDENT: '${{ secrets.CERTNAME }}'
           NOTARY: '${{ secrets.NOTARY }}'
           CMAKE_CXX_STANDARD: 11
           PKG_CONFIG_PATH: /usr/local/opt/libtiff/lib/pkgconfig:/usr/local/opt/libffi/lib/pkgconfig:/usr/local/opt/expat/lib/pkgconfig
