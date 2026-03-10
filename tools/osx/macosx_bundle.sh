@@ -375,23 +375,23 @@ if [[ -n $CODESIGNID ]]; then
     plutil -convert xml1 "${CMAKE_BUILD_TYPE}"/rt.entitlements
     for frame in ${APP}/Contents/Frameworks/* ; do
         echo $frame
-        codesign --preserve-metadata=identifier --digest-algorithm=sha1,sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements $frame
+        codesign --preserve-metadata=identifier --digest-algorithm=sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements $frame
     done
     for resource in ${APP}/Contents/Resources/* ; do
         echo $resource
         if [ ! -d $resource ]; then
-            codesign --preserve-metadata=identifier --digest-algorithm=sha1,sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements $resource
+            codesign --preserve-metadata=identifier --digest-algorithm=sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements $resource
         else
             for subresource in ${APP}/Contents/Resources/$(basename $resource)/* ; do
                 if [ ! -d $subresource ]; then
-                    codesign --preserve-metadata=identifier --digest-algorithm=sha1,sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements $subresource
+                    codesign --preserve-metadata=identifier --digest-algorithm=sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements $subresource
                 fi
             done
         fi
     done
-    codesign --preserve-metadata=identifier --digest-algorithm=sha1,sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements "${APP}"/Contents/MacOS/rawtherapee-cli
-    codesign --preserve-metadata=identifier --digest-algorithm=sha1,sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements "${APP}"/Contents/MacOS/rawtherapee
-    codesign --preserve-metadata=identifier --digest-algorithm=sha1,sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements "${APP}"
+    codesign --preserve-metadata=identifier --digest-algorithm=sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements "${APP}"/Contents/MacOS/rawtherapee-cli
+    codesign --preserve-metadata=identifier --digest-algorithm=sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements "${APP}"/Contents/MacOS/rawtherapee
+    codesign --preserve-metadata=identifier --digest-algorithm=sha256 --force --timestamp --strict -v -s "${CODESIGNID}" -i com.rawtherapee.RawTherapee -o runtime --entitlements "${CMAKE_BUILD_TYPE}"/rt.entitlements "${APP}"
     spctl -a -vvvv "${APP}"
 fi
 
@@ -406,8 +406,7 @@ fi
 
 function CreateDmg {
     local srcDir="$(mktemp -dt $$.XXXXXXXXXXXX)"
-
-    msg "Preparing disk image sources at ${srcDir}:"
+    msg ${srcDir}    msg "Preparing disk image sources at ${srcDir}:"
     cp -R "${APP}" "${srcDir}"
     ln -s /Applications "${srcDir}"
 
@@ -426,7 +425,7 @@ function CreateDmg {
         arch="Universal"
     fi
     dmg_name="${PROJECT_NAME}_macOS_${MINIMUM_SYSTEM_VERSION}_${arch}_${PROJECT_FULL_VERSION}"
-    lower_build_type="$(tr '[:upper:]' '[:lower:]' <<< "$CMAKE_BUILD_TYPE")"
+    lower_build_type="$(tr '[:upper:]' '[:lower:]' <<< $CMAKE_BUILD_TYPE)"
     if [[ $lower_build_type != release ]]; then
         dmg_name="${dmg_name}_${lower_build_type}"
     fi
@@ -436,10 +435,10 @@ function CreateDmg {
         echo "Building Fancy .dmg"
         touch message
         MESSAGE="$(cat message)"
-        magick ${PROJECT_SOURCE_DATA_DIR}/rtdmg-bkgd.png -pointsize 80 -fill Black -draw "text 14,1307 '${PROJECT_FULL_VERSION}'" -fill Salmon -draw "text 10,1300 '${PROJECT_FULL_VERSION}'" ./rtdmg-bkgd.png
-        magick ./rtdmg-bkgd.png -pointsize 90 -fill Black -gravity center -draw "text 5,120 \"$MESSAGE\"" -fill Red -gravity center -font Menlo-Bold -draw "text 1,124 \"$MESSAGE\"" ./rtdmg-bkgd.png
+        magick ${PROJECT_SOURCE_DATA_DIR}/rtdmg-bkgd.png -pointsize 80 -fill Black -draw "text 14,1307 '${PROJECT_FULL_VERSION}'" -fill Salmon -draw "text 10,1300 '${PROJECT_FULL_VERSION}'" ${PROJECT_SOURCE_DATA_DIR}/rtdmg-bkgd.png
+        magick ${PROJECT_SOURCE_DATA_DIR}/rtdmg-bkgd.png -pointsize 90 -fill Black -gravity center -draw "text 5,120 \"$MESSAGE\"" -fill Red -gravity center -font Menlo-Bold -draw "text 1,124 \"$MESSAGE\"" ${PROJECT_SOURCE_DATA_DIR}/rtdmg-bkgd.png
         create-dmg \
-        --background ./rtdmg-bkgd.png \
+        --background "${PROJECT_SOURCE_DATA_DIR}"/rtdmg-bkgd.png \
         --volname ${PROJECT_NAME}_${PROJECT_FULL_VERSION} \
         --volicon ${PROJECT_SOURCE_DATA_DIR}/rtdmg.icns \
         --window-pos 72 72 \
@@ -460,7 +459,7 @@ function CreateDmg {
         --hide-extension Forum.webloc \
         --hide-extension Documentation.webloc \
         --filesystem APFS \
-        ${dmg_name}.dmg ${srcDir}
+            ${dmg_name}.dmg ${srcDir}
     else
         hdiutil create -format UDBZ -fs HFS+ -srcdir "${srcDir}" -volname "${PROJECT_NAME}_${PROJECT_FULL_VERSION}" "${dmg_name}.dmg"
     fi
@@ -468,7 +467,7 @@ function CreateDmg {
     # Sign disk image
     if [[ -n $CODESIGNID ]]; then
         msg "Signing disk image"
-        codesign  --digest-algorithm=sha1,sha256 --force -v -s "${CODESIGNID}" --timestamp "${dmg_name}.dmg"
+        codesign  --digest-algorithm=sha256 --force -v -s "${CODESIGNID}" --timestamp "${dmg_name}.dmg"
     fi
 
     # Notarize the dmg
