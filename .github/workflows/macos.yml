@@ -369,7 +369,7 @@ jobs:
           curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip  -o rt.zip
           unzip rt.zip
           cd Raw*folder
-          bash -c "yes || true" | hdiutil attach *dmg
+          yes | hdiutil attach *dmg || true
           cd /Volumes/RawTherapee*
           sudo cp -R RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
