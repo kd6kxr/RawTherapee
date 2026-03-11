@@ -14,11 +14,11 @@ on:
 
 jobs:
   intelbuild:
-    runs-on: macos-15-intel
+    runs-on: macos-26-intel
     outputs:
       artifact: ${{ steps.gen.outputs.file }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install the Apple certificate
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -149,7 +149,7 @@ jobs:
           "ARTIFACT_FILE: ${ARTIFACT_FILE}" \
           "PUBLISH_NAME: ${PUBLISH_NAME}"
           exit
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: ${{env.ARTIFACT_FILE}}
           path: ${{env.ARTIFACT_PATH}}
@@ -160,7 +160,7 @@ jobs:
           zsh -c 'echo "Build completed in $(printf "%0.2f" $(($[$(date +%s)-$(cat build/stamp)]/$((60.))))) minutes"'
 
       - name: Publish artifacts
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' }}
         with:
           tag_name: nightly-github-actions
@@ -187,7 +187,7 @@ jobs:
     runs-on: macos-26
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Install the Apple certificate
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -330,7 +330,7 @@ jobs:
           zsh -c 'echo "Build completed in $(printf "%0.2f" $(($[$(date +%s)-$(cat build/stamp)]/$((60.))))) minutes"'
 
       - name: Publish artifacts
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' }}
         with:
           tag_name: nightly-github-actions
@@ -358,9 +358,9 @@ jobs:
 
   universaltest:
     needs: armbuild
-    runs-on: macos-15-intel
+    runs-on: macos-26-intel
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Verify Universal App on x86_64
         run: |
           export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] ; then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
