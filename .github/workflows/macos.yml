@@ -380,8 +380,9 @@ jobs:
           echo "in dmg directory"
           sudo cp -R RawTherapee.app /Applications
           echo "copied"
-          open -a /Applications/RawTherapee.app
+          open -a RawTherapee
           echo "opened"
-          sleep 5
+          sleep 10
+          echo "slept"
           re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo 'Success!' ; else exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
