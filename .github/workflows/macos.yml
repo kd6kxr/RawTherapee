@@ -380,7 +380,7 @@ jobs:
           echo "in dmg directory"
           sudo cp -R RawTherapee.app /Applications
           echo "copied"
-          open -a RawTherapee
+          open -a /Applications/RawTherapee.app
           echo "opened"
           sleep 10
           echo "slept"
