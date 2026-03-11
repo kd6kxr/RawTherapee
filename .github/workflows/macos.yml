@@ -160,7 +160,7 @@ jobs:
           zsh -c 'echo "Build completed in $(printf "%0.2f" $(($[$(date +%s)-$(cat build/stamp)]/$((60.))))) minutes"'
 
       - name: Publish artifacts
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' }}
         with:
           tag_name: nightly-github-actions
@@ -330,7 +330,7 @@ jobs:
           zsh -c 'echo "Build completed in $(printf "%0.2f" $(($[$(date +%s)-$(cat build/stamp)]/$((60.))))) minutes"'
 
       - name: Publish artifacts
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         if: ${{github.ref_type == 'tag' || github.ref_name == 'dev' }}
         with:
           tag_name: nightly-github-actions
