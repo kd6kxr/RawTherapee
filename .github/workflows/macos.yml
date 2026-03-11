@@ -368,9 +368,8 @@ jobs:
           cd && mkdir test && cd test
           curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip  -o rt.zip
           unzip rt.zip
-          cd Raw*folder
-          ( trap '' PIPE; ( trap 'trap - TERM; echo "kill from yes subshell ..." >&2; kill "$yes_pid"; exit 0' TERM; subshell_pid="$BASHPID"; yes & yes_pid=$!; echo "$subshell_pid"; wait "$yes_pid" ) | ( trap 'trap - EXIT; kill -s TERM "$subshell_pid"; exit' EXIT; read -r subshell_pid; PAGER=cat hdiutil attach ./*.dmg ); echo "${PIPESTATUS[*]}" )          cd /Volumes/RawTherapee*
-          sudo cp -R RawTherapee.app /Applications
+          cd Raw*folder && ( trap '' PIPE; ( trap 'trap - TERM; echo "kill from yes subshell ..." >&2; kill "$yes_pid"; exit 0' TERM; subshell_pid="$BASHPID"; yes & yes_pid=$!; echo "$subshell_pid"; wait "$yes_pid" ) | ( trap 'trap - EXIT; kill -s TERM "$subshell_pid"; exit' EXIT; read -r subshell_pid; PAGER=cat hdiutil attach ./*.dmg ); echo "${PIPESTATUS[*]}" )          
+          cd /Volumes/RawTherapee* && sudo cp -R RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
           re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo 'Success!' ; else exit 1 ; fi
