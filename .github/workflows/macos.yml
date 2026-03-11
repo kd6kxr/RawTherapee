@@ -372,12 +372,16 @@ jobs:
           cd Raw*folder
           ls -lah
           hdiutil convert *.dmg -format UDTO -o rt.cdr
+          echo "converted"
           hdiutil attach rt.cdr
-          ls /Volumes -lah
+          echo "attached"
+          ls /Volumes
           cd /Volumes/RawTherapee*
-          ls -lah
+          echo "in dmg directory"
           sudo cp -R RawTherapee.app /Applications
+          echo "copied"
           open -a /Applications/RawTherapee.app
+          echo "opened"
           sleep 5
           re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo 'Success!' ; else exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
