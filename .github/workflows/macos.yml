@@ -369,7 +369,7 @@ jobs:
           curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip  -o rt.zip
           unzip rt.zip
           cd Raw*folder
-          yes | PAGER=cat hdiutil attach *dmg || true
+          ( trap '' PIPE; ( trap 'trap - TERM; echo "kill from yes subshell ..." 1>&2; kill "$yes_pid"; exit 0' TERM; subshell_pid="$(bash -c '"'"'echo "$PPID"'"'"')"; ( sleep 0; exec yes ) & yes_pid=$!; echo "$subshell_pid"; wait "$yes_pid" ) | ( trap 'trap - EXIT; kill -s TERM "$subshell_pid"; exit' EXIT; subshell_pid="$(head -n 1)"; PAGER=cat hdiutil attach *.dmg ); echo "${PIPESTATUS[*]}" )
           cd /Volumes/RawTherapee*
           sudo cp -R RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
