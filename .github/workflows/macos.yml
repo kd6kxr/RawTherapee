@@ -366,10 +366,17 @@ jobs:
           export RAW_THERAPEE_VERSION=$(if [[ "$(git status | head -1 | cut -f1 -d' ')" = 'HEAD' ]] ; then git describe --tags | cut -f1,2 -d'.' ; else git status | cut -f3 -d' ' | head -1 ; fi)
           export REF=${GITHUB_REF##*/}
           cd && mkdir test && cd test
-          curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip  -o rt.zip
+          curl -L https://github.com/kd6kxr/RawTherapee/releases/download/nightly-github-actions/RawTherapee_"$REF"_macOS_Universal_Release.zip -o rt.zip
           unzip rt.zip
-          cd Raw*folder && hdiutil convert *.dmg -format UDTO -o rt.cdr && hdiutil attach rt.cdr
-          cd /Volumes/RawTherapee* && sudo cp -R RawTherapee.app /Applications
+          ls -lah
+          cd Raw*folder
+          ls -lah
+          hdiutil convert *.dmg -format UDTO -o rt.cdr
+          hdiutil attach rt.cdr
+          ls /Volumes -lah
+          cd /Volumes/RawTherapee*
+          ls -lah
+          sudo cp -R RawTherapee.app /Applications
           open -a /Applications/RawTherapee.app
           sleep 5
           re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo 'Success!' ; else exit 1 ; fi
