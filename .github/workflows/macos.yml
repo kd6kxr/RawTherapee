@@ -384,5 +384,5 @@ jobs:
           echo "opened"
           sleep 10
           echo "slept"
-          re='^.*rawtherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo 'Success!' ; else exit 1 ; fi
+          re='^.*RawTherapee.*$' ; check=$(osascript -e 'tell application "Finder" to get the name of every process whose visible is true') ; if [[ $check =~ $re ]] ; then echo 'Success!' ; else exit 1 ; fi
           osascript -e 'tell application "RawTherapee" to if it is running then quit'
